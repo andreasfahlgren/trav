@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biljettsläpp | Spring 2026</title>
+    <meta name="description" content="Discover upcoming events, festivals, and concerts in Sweden for March and April 2026.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">Biljett<span class="highlight">släpp</span></div>
+            <div class="nav-links">
+                <button id="nav-all-releases" class="nav-btn active">All Releases</button>
+                <button id="nav-dashboard" class="nav-btn hidden">My Tracked Drops</button>
+                <button id="nav-admin" class="nav-btn">Admin Panel</button>
+                <button id="login-btn" class="login-btn">Log In / Sign Up</button>
+                <div id="user-profile" class="user-profile hidden">
+                    <span id="user-greeting">Hi, User</span>
+                    <button id="logout-btn" class="logout-btn">Log Out</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login/Signup Modal -->
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Create Account to Track Drops</h2>
+            <p>Never miss a ticket release again. Follow your favorite artists and events.</p>
+            <form id="auth-form">
+                <input type="text" id="username-input" placeholder="Enter a username" required>
+                <button type="submit" class="submit-btn">Start Tracking</button>
+            </form>
+        </div>
+    </div>
+
+    <main>
+        <header class="hero">
+            <div class="hero-content">
+                <h1>Secure Your <span class="highlight">Tickets</span></h1>
+                <p>Track upcoming ticket releases for the biggest concerts, festivals, and events in Sweden. Get notified before they sell out.</p>
+            </div>
+        </header>
+        <!-- Main 'All Releases' View -->
+        <section id="view-all" class="events-section">
+            <div class="list-toggle-container">
+                <button class="list-toggle-btn active" data-type="upcoming">Kommande Släpp</button>
+                <button class="list-toggle-btn" data-type="released">Redan Släppta</button>
+            </div>
+            <div class="controls-bar">
+                <div class="filter-container" id="filter-container">
+                    <!-- Filters dynamically injected via script.js -->
+                </div>
+                <!-- Sort Data Toggle -->
+                <div class="sort-container">
+                    <label for="sort-select">Sortera på:</label>
+                    <select id="sort-select">
+                        <option value="releaseDate">Närmast Släpp</option>
+                        <option value="eventDate">Närmast Event</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loading-spinner" class="loading-container">
+                <div class="spinner"></div>
+                <p>Fetching real-time drops from Ticketmaster...</p>
+            </div>
+
+            <div class="events-grid hidden" id="events-grid">
+                <!-- Events are dynamically injected via script.js -->
+            </div>
+        </section>
+
+        <!-- User Dashboard View -->
+        <section id="view-dashboard" class="events-section hidden">
+            <div class="dashboard-header">
+                <h2>Your Tracked <span class="highlight">Releases</span></h2>
+                <p>Releases you are following. We'll remind you when the drop happens.</p>
+            </div>
+            <div class="events-grid" id="tracked-grid">
+                <!-- Tracked Events are dynamically injected via script.js -->
+            </div>
+            <div id="no-tracks-message" class="empty-state hidden">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                <h3>You aren't tracking any releases yet.</h3>
+                <p>Go to 'All Releases' and click 'Track Drop' on events you care about.</p>
+            </div>
+        </section>
+
+        <!-- Event Detail View -->
+        <section id="view-event-detail" class="events-section hidden">
+            <button class="back-btn" id="back-to-list-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Releases
+            </button>
+            
+            <div class="event-detail-header">
+                <h2 id="detail-title">Event Title</h2>
+                <p class="artist-name" id="detail-artist">Artist Name</p>
+                <div class="event-location" id="detail-location-info">Location Info</div>
+            </div>
+
+            <div class="event-detail-layout">
+                <div class="event-detail-main">
+                    <h3>About the Event</h3>
+                    <div id="detail-full-info" class="detail-description">
+                        <!-- Full info injected here -->
+                    </div>
+                    
+                    <div class="participants-section">
+                        <h3>Participants / Lineup</h3>
+                        <ul id="detail-participants" class="participants-list">
+                            <!-- Participants injected here -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="event-detail-sidebar">
+                    <div class="pos-card">
+                        <h3>Ticket Drop</h3>
+                        <div class="release-badge large" id="detail-release-date">Release Date</div>
+                        <p class="pos-info">Official Ticketing Partner:</p>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="buy-link" id="detail-buy-site">Buy on Ticketmaster SE</a>
+                        
+                        <div class="sidebar-divider"></div>
+                        
+                        <p class="sidebar-track-text">Don't miss the drop:</p>
+                        <button class="track-btn" id="detail-track-btn">Track This Drop</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin View -->
+        <section id="view-admin" class="events-section hidden">
+            <div class="dashboard-header">
+                <h2>Admin <span class="highlight">Panel</span></h2>
+                <p>Manage and override event metadata manually.</p>
+            </div>
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Title & Artist</th>
+                            <th>Category</th>
+                            <th>Release Date Override</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body">
+                        <!-- Admin rows dynamically injected -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
